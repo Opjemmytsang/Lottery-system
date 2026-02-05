@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="zh-HK">
+<head>
+  <meta charset="UTF-8">
+  <title>抽獎系統</title>
+  <style>
+    body {
+      font-family: "Microsoft JhengHei", sans-serif;
+      background: #f7f7f7;
+      text-align: center;
+      padding: 50px;
+    }
+    h1 {
+      color: #333;
+    }
+    button {
+      padding: 10px 20px;
+      font-size: 18px;
+      margin-top: 20px;
+      cursor: pointer;
+      background-color: #0078d7;
+      color: white;
+      border: none;
+      border-radius: 5px;
+    }
+    button:hover {
+      background-color: #005a9e;
+    }
+    #winner {
+      margin-top: 40px;
+      font-size: 24px;
+      color: #d6336c;
+      font-weight: bold;
+    }
+    #remaining {
+      margin-top: 20px;
+      font-size: 18px;
+      color: #555;
+    }
+  </style>
+</head>
+<body>
+  <h1>🎉 抽獎系統 🎉</h1>
+  <p>按下按鈕隨機抽出一位幸運兒（不會重複）！</p>
+  <button onclick="draw()">開始抽獎</button>
+  <div id="winner"></div>
+  <div id="remaining"></div>
+
+  <script>
+    let names = [
+      "CW4 陳少玲","CWC 李金鈕","CWD 周慶釗","JD6 吳厚默","KF1 黃秀娟","KL1 杜坤成",
+      "MA4 姚文成","MA5 翁卓敬","MA6 盧熾球","MA8 彭可昌","MA9 林美祺","MAA 施銘山",
+      "MAF 張國棟","MAG 林志强","MAH 吳文林","MAJ 歐廣文","MAL 楊耀生","MAM 毛展強",
+      "MAO 余國雄","MAP 林兆強","MAQ 葉沛達","MAR 鄧偉傑","MAS 王展鵬","MAU 劉國賢",
+      "MK1 郭劍峰","MK2 馮子泉","MK7 王生偉","MK8 陳峰雲","MKC 何川","MKD 戴玲玲",
+      "MKE 劉世傑","MKF 陳小琪","MKG 李雅雲","MO1 朱國強","NC1 麥錦燦","NP4 吳凝琦",
+      "NP5 陳秋明","SGO 莊偉平","SS1 勞俊諺","SS2 李祥江","ST5 黃文鋒","ST6 張漢威",
+      "TC1 莊銘塨","TF1 邱志明","TK2 高文禮","TK3 鄭偉華","TK4 郭志強","TK5 李淑芬",
+      "TM1 吳沛權","TM3 陳志偉","TM4 鄭志建","TP1 鄧展鵬","TS6 周治中","TSA 吳惠蓉",
+      "TSB 余健林","TSC 陳卓君","TW1 楊凱帆","TW2 鄭志文","TW4 曾昭樑","TW5 許栢祺",
+      "TY1 李漢熙","WC1 張志傑","WF1 柯誌泰","WT1 李小軍","YL4 關雪儀","YL5 梁維昌",
+      "司機 Johnny","金至尊 林悅彬","金至尊 陳子倫","金至尊 楊振民","金至尊 杜兆榮",
+      "金至尊 葉家麗","集團 王巧陽","集團 黃蘭詩","集團 黃蘇娟","集團 林華","集團 徐守瑜",
+      "集團 陳靜賢","集團 張智強","集團 蔡麗華","集團 彭永權","集團 余錦池","集團 譚偉賢",
+      "集團 黎佩瑜","集團 李兆麟","集團 陳志豪"
+    ];
+
+    function draw() {
+      if (names.length === 0) {
+        document.getElementById("winner").innerText = "🎊 所有人都已經抽過了！ 🎊";
+        document.getElementById("remaining").innerText = "";
+        return;
+      }
+      const index = Math.floor(Math.random() * names.length);
+      const winner = names.splice(index, 1)[0]; // 抽出並移除
+      document.getElementById("winner").innerText = "🎊 恭喜 " + winner + " 🎊";
+      document.getElementById("remaining").innerText = "剩餘人數：" + names.length;
+    }
+  </script>
+</body>
+</html>
