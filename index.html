@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <meta name="apple-mobile-web-app-capable" content="yes"> <!-- 加強 iPad/Safari 相容 -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
   <title>分行主管聯歡晚宴 壓軸幸運大抽獎</title>
   <style>
     body {
@@ -91,16 +91,20 @@
 </head>
 <body>
   <h1>🎉分行主管聯歡晚宴<br>壓軸幸運大抽獎🎉</h1>
-  <p>按下「開始抽獎」開始，配有音效！重新整理也不會重置已抽名單<br>想從頭開始請按「重設抽獎」</p>
+  <p>按下「開始抽獎」開始，配有音效 + 背景音樂！（Safari/iPad 需點擊後才播背景音樂）<br>重新整理也不會重置已抽名單，想從頭開始請按「重設抽獎」</p>
 
-  <!-- 音效元素 - 使用根目錄檔名 -->
+  <!-- 背景音樂：loop 循環播放 -->
+  <audio id="bgMusic" loop preload="auto">
+    <source src="Background-Music.mpeg" type="audio/mpeg">
+    Your browser does not support the audio element.
+  </audio>
+
+  <!-- 抽獎音效 -->
   <audio id="drumRoll" preload="auto">
     <source src="drumroll.mp3" type="audio/mpeg">
-    Your browser does not support the audio element.
   </audio>
   <audio id="winSound" preload="auto">
     <source src="win-cheer.mp3" type="audio/mpeg">
-    Your browser does not support the audio element.
   </audio>
 
   <div class="button-container">
@@ -125,15 +129,14 @@
       "NP5 陳秋明","SGO 莊偉平","SS1 勞俊諺","SS2 李祥江","ST5 黃文鋒","ST6 張漢威",
       "TC1 莊銘塨","TF1 邱志明","TK2 高文禮","TK3 鄭偉華","TK4 郭志強","TK5 李淑芬",
       "TM1 吳沛權","TM3 陳志偉","TM4 鄭志建","TP1 鄧展鵬","TS6 周治中","TSA 吳惠蓉",
-      "TSB 余健林","TSC 陳卓君","TW1 楊凱帆","TW2 鄭志文","TW4 曾昭樑",
+      "TSB 余健林","TSC 陳卓君","TW1 楊凱帆","TW2 鄭志文","TW4 曾昭樑","TW5 許栢祺",
       "TY1 李漢熙","WC1 張志傑","WF1 柯誌泰","WT1 李小軍","YL4 關雪儀","YL5 梁維昌",
-      "集團 Johnny","金至尊 林悅彬","金至尊 陳子倫","金至尊 楊振民","金至尊 杜兆榮",
+      "司機 Johnny","金至尊 林悅彬","金至尊 陳子倫","金至尊 楊振民","金至尊 杜兆榮",
       "金至尊 葉家麗","集團 王巧陽","集團 黃蘭詩","集團 黃蘇娟","集團 林華","集團 徐守瑜",
       "集團 陳靜賢","集團 張智強","集團 蔡麗華","集團 彭永權","集團 余錦池","集團 譚偉賢",
       "集團 黎佩瑜","集團 李兆麟","集團 陳志豪"
     ];
 
-    // 從 localStorage 讀取剩餘名單
     let names = [];
     const savedNames = localStorage.getItem(STORAGE_KEY);
     if (savedNames) {
@@ -152,6 +155,9 @@
     const drawBtn = document.getElementById("drawBtn");
     const drumRoll = document.getElementById("drumRoll");
     const winSound = document.getElementById("winSound");
+    const bgMusic = document.getElementById("bgMusic");
+
+    let isBgMusicStarted = false;  // 避免重複播放
 
     function saveRemaining() {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(names));
@@ -163,6 +169,13 @@
     }
 
     function startDraw() {
+      // 第一次點擊時啟動背景音樂（Safari 允許在使用者互動後播放）
+      if (!isBgMusicStarted) {
+        bgMusic.volume = 0.3;  // 背景音樂音量調低，避免蓋過抽獎音效（可調整 0.1~0.5）
+        bgMusic.play().catch(e => console.log("背景音樂播放失敗", e));
+        isBgMusicStarted = true;
+      }
+
       if (names.length === 0) {
         winnerDiv.innerText = "🎊 所有人都已經抽過了！ 🎊";
         winnerDiv.classList.add("show");
@@ -174,9 +187,8 @@
       winnerDiv.classList.remove("show");
       winnerDiv.innerText = "";
 
-      // 播放鼓聲
       drumRoll.currentTime = 0;
-      drumRoll.play().catch(e => console.log("鼓聲播放失敗，可能需使用者互動", e));
+      drumRoll.play().catch(e => console.log("鼓聲播放失敗", e));
 
       let shuffleCount = 0;
       const maxShuffles = 40 + Math.floor(Math.random() * 20);
@@ -196,7 +208,6 @@
           winnerDiv.innerText = "🎊 恭喜 " + winner + " 🎊";
           winnerDiv.classList.add("show");
 
-          // 播放勝利音效
           winSound.currentTime = 0;
           winSound.play().catch(e => console.log("勝利音效播放失敗", e));
 
@@ -216,6 +227,7 @@
         drawBtn.disabled = false;
         drumRoll.pause();
         winSound.pause();
+        // 背景音樂不需重設，可繼續播或暫停：這裡保持繼續播
         updateRemaining();
         alert("抽獎已重設完成！");
       }
