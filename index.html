@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="apple-mobile-web-app-capable" content="yes"> <!-- 加強 iPad/Safari 相容 -->
   <title>分行主管聯歡晚宴 壓軸幸運大抽獎</title>
   <style>
     body {
@@ -92,12 +93,14 @@
   <h1>🎉分行主管聯歡晚宴<br>壓軸幸運大抽獎🎉</h1>
   <p>按下「開始抽獎」開始，配有音效！重新整理也不會重置已抽名單<br>想從頭開始請按「重設抽獎」</p>
 
-  <!-- 音效元素 -->
+  <!-- 音效元素 - 使用根目錄檔名 -->
   <audio id="drumRoll" preload="auto">
-    <source src="https://assets.mixkit.co/sfx/preview/mixkit-drum-roll-146.mp3" type="audio/mpeg">
+    <source src="drumroll.mp3" type="audio/mpeg">
+    Your browser does not support the audio element.
   </audio>
   <audio id="winSound" preload="auto">
-    <source src="https://assets.mixkit.co/sfx/preview/mixkit-cheerful-crowd-cheering-464.mp3" type="audio/mpeg">
+    <source src="win-cheer.mp3" type="audio/mpeg">
+    Your browser does not support the audio element.
   </audio>
 
   <div class="button-container">
@@ -110,7 +113,7 @@
   <div id="remaining">剩餘人數：計算中...</div>
 
   <script>
-    const STORAGE_KEY = "luckyDrawRemainingNames";  // localStorage 儲存鍵名
+    const STORAGE_KEY = "luckyDrawRemainingNames";
 
     const originalNames = [
       "CW4 陳少玲","CWC 李金鈕","CWD 周慶釗","JD6 吳厚默","KF1 黃秀娟","KL1 杜坤成",
@@ -124,20 +127,20 @@
       "TM1 吳沛權","TM3 陳志偉","TM4 鄭志建","TP1 鄧展鵬","TS6 周治中","TSA 吳惠蓉",
       "TSB 余健林","TSC 陳卓君","TW1 楊凱帆","TW2 鄭志文","TW4 曾昭樑",
       "TY1 李漢熙","WC1 張志傑","WF1 柯誌泰","WT1 李小軍","YL4 關雪儀","YL5 梁維昌",
-      "司機 Johnny","金至尊 林悅彬","金至尊 陳子倫","金至尊 楊振民","金至尊 杜兆榮",
+      "集團 Johnny","金至尊 林悅彬","金至尊 陳子倫","金至尊 楊振民","金至尊 杜兆榮",
       "金至尊 葉家麗","集團 王巧陽","集團 黃蘭詩","集團 黃蘇娟","集團 林華","集團 徐守瑜",
       "集團 陳靜賢","集團 張智強","集團 蔡麗華","集團 彭永權","集團 余錦池","集團 譚偉賢",
       "集團 黎佩瑜","集團 李兆麟","集團 陳志豪"
     ];
 
-    // 從 localStorage 讀取剩餘名單，若無則用原始
+    // 從 localStorage 讀取剩餘名單
     let names = [];
     const savedNames = localStorage.getItem(STORAGE_KEY);
     if (savedNames) {
       try {
         names = JSON.parse(savedNames);
       } catch (e) {
-        names = [...originalNames];  // 若解析失敗，用原始
+        names = [...originalNames];
       }
     } else {
       names = [...originalNames];
@@ -156,7 +159,7 @@
 
     function updateRemaining() {
       remainingDiv.innerText = "剩餘人數：" + names.length;
-      saveRemaining();  // 每次更新剩餘時都存一次
+      saveRemaining();
     }
 
     function startDraw() {
@@ -171,8 +174,9 @@
       winnerDiv.classList.remove("show");
       winnerDiv.innerText = "";
 
+      // 播放鼓聲
       drumRoll.currentTime = 0;
-      drumRoll.play().catch(e => console.log("音效播放失敗", e));
+      drumRoll.play().catch(e => console.log("鼓聲播放失敗，可能需使用者互動", e));
 
       let shuffleCount = 0;
       const maxShuffles = 40 + Math.floor(Math.random() * 20);
@@ -192,6 +196,7 @@
           winnerDiv.innerText = "🎊 恭喜 " + winner + " 🎊";
           winnerDiv.classList.add("show");
 
+          // 播放勝利音效
           winSound.currentTime = 0;
           winSound.play().catch(e => console.log("勝利音效播放失敗", e));
 
@@ -204,7 +209,7 @@
     function resetDraw() {
       if (confirm("確定要重設抽獎？所有已抽過的名單將恢復，localStorage 也會清除！")) {
         names = [...originalNames];
-        localStorage.removeItem(STORAGE_KEY);  // 清除儲存
+        localStorage.removeItem(STORAGE_KEY);
         display.innerText = "";
         winnerDiv.innerText = "";
         winnerDiv.classList.remove("show");
@@ -216,7 +221,6 @@
       }
     }
 
-    // 頁面載入時更新顯示
     updateRemaining();
   </script>
 </body>
