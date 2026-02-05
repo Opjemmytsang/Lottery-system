@@ -5,37 +5,45 @@
   <title>抽獎系統</title>
   <style>
     body {
-      font-family: "Microsoft JhengHei", sans-serif;
+      font-family: "Microsoft JhengHei", "微軟正黑體", Arial, sans-serif;
       background: #f7f7f7;
       text-align: center;
       padding: 50px;
     }
     h1 {
+      font-family: "Microsoft JhengHei", "微軟正黑體", Arial, sans-serif;
       color: #333;
     }
-    button {
-      padding: 10px 20px;
+    p {
+      font-family: "Microsoft JhengHei", "微軟正黑體", Arial, sans-serif;
       font-size: 18px;
-      margin-top: 20px;
+    }
+    button {
+      font-family: "Microsoft JhengHei", "微軟正黑體", Arial, sans-serif;
+      padding: 12px 28px;
+      font-size: 20px;
+      margin-top: 25px;
       cursor: pointer;
       background-color: #0078d7;
       color: white;
       border: none;
-      border-radius: 5px;
+      border-radius: 6px;
     }
     button:hover {
       background-color: #005a9e;
     }
     #winner {
-      margin-top: 40px;
-      font-size: 24px;
+      margin-top: 50px;
+      font-size: 36px;           /* 這裡放大恭喜文字 */
       color: #d6336c;
       font-weight: bold;
+      font-family: "Microsoft JhengHei", "微軟正黑體", Arial, sans-serif;
     }
     #remaining {
-      margin-top: 20px;
-      font-size: 18px;
+      margin-top: 25px;
+      font-size: 20px;
       color: #555;
+      font-family: "Microsoft JhengHei", "微軟正黑體", Arial, sans-serif;
     }
   </style>
 </head>
@@ -72,7 +80,7 @@
         return;
       }
       const index = Math.floor(Math.random() * names.length);
-      const winner = names.splice(index, 1)[0]; // 抽出並移除
+      const winner = names.splice(index, 1)[0];
       document.getElementById("winner").innerText = "🎊 恭喜 " + winner + " 🎊";
       document.getElementById("remaining").innerText = "剩餘人數：" + names.length;
     }
