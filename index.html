@@ -2,27 +2,38 @@
 <html lang="zh-HK">
 <head>
   <meta charset="UTF-8">
-  <title>抽獎系統</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>抽獎系統 - iPad 優化版</title>
   <style>
     body {
       font-family: "Microsoft JhengHei", "微軟正黑體", Arial, sans-serif;
       background: #f7f7f7;
       text-align: center;
-      padding: 50px;
+      padding: 60px 20px;
+      margin: 0;
+      min-height: 100vh;
+      box-sizing: border-box;
     }
     h1 {
       color: #333;
+      font-size: 48px;
+      margin-bottom: 20px;
+    }
+    p {
+      font-size: 28px;
+      margin-bottom: 40px;
     }
     button {
-      padding: 12px 28px;
-      font-size: 20px;
-      margin-top: 25px;
+      padding: 20px 60px;
+      font-size: 32px;
+      margin: 30px 0;
       cursor: pointer;
       background-color: #0078d7;
       color: white;
       border: none;
-      border-radius: 6px;
+      border-radius: 12px;
       font-family: "Microsoft JhengHei", "微軟正黑體", Arial, sans-serif;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
     }
     button:hover {
       background-color: #005a9e;
@@ -30,43 +41,57 @@
     button:disabled {
       background-color: #aaa;
       cursor: not-allowed;
+      box-shadow: none;
+    }
+
+    #display {
+      margin: 40px 0;
+      font-size: 60px;          /* 滾動區大字體，適合 iPad */
+      font-weight: bold;
+      color: #2d3436;
+      min-height: 100px;
+      letter-spacing: 4px;
     }
 
     #winner {
-      margin-top: 50px;
-      font-size: 36px;
+      margin: 60px 0 40px;
+      font-size: 48px;          /* 恭喜文字更大 */
       color: #d6336c;
       font-weight: bold;
-      min-height: 60px;
+      min-height: 80px;
       opacity: 0;
-      transform: scale(0.8);
+      transform: scale(0.9);
       transition: all 0.6s ease-out;
     }
 
     #winner.show {
       opacity: 1;
-      transform: scale(1.1);
-      animation: pulse 1.5s infinite alternate;
+      transform: scale(1.05);
+      animation: pulse 1s infinite alternate 3;   /* 只閃 3 秒（約 3 次脈動） */
     }
 
     @keyframes pulse {
-      from { transform: scale(1.05); text-shadow: 0 0 10px #ff6b6b; }
-      to   { transform: scale(1.15); text-shadow: 0 0 30px #ff4757; }
-    }
-
-    #display {
-      margin-top: 30px;
-      font-size: 48px;
-      font-weight: bold;
-      color: #2d3436;
-      min-height: 70px;
-      letter-spacing: 2px;
+      from {
+        transform: scale(1.0);
+        text-shadow: 0 0 15px #ff6b6b;
+      }
+      to {
+        transform: scale(1.15);
+        text-shadow: 0 0 40px #ff4757, 0 0 60px #ff4757;
+      }
     }
 
     #remaining {
-      margin-top: 25px;
-      font-size: 20px;
+      font-size: 28px;
       color: #555;
+      margin-top: 30px;
+    }
+
+    @media (orientation: landscape) {
+      body { padding: 40px 60px; }
+      h1 { font-size: 52px; }
+      #display { font-size: 70px; }
+      #winner { font-size: 56px; }
     }
   </style>
 </head>
@@ -118,9 +143,8 @@
       winnerDiv.classList.remove("show");
       winnerDiv.innerText = "";
 
-      // 快速滾動名字（shuffle 效果）
       let shuffleCount = 0;
-      const maxShuffles = 40 + Math.floor(Math.random() * 20); // 滾動 40~60 次
+      const maxShuffles = 40 + Math.floor(Math.random() * 20);
       const shuffleInterval = setInterval(() => {
         const randomName = names[Math.floor(Math.random() * names.length)];
         display.innerText = randomName;
@@ -129,7 +153,6 @@
         if (shuffleCount >= maxShuffles) {
           clearInterval(shuffleInterval);
 
-          // 最後抽出真實中獎者
           const index = Math.floor(Math.random() * names.length);
           const winner = names.splice(index, 1)[0];
 
@@ -140,10 +163,9 @@
           updateRemaining();
           drawBtn.disabled = false;
         }
-      }, 80); // 每 80ms 換一次，速度感強
+      }, 80);
     }
 
-    // 頁面載入時先更新剩餘人數
     updateRemaining();
   </script>
 </body>
