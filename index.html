@@ -21,11 +21,11 @@
       margin-bottom: 20px;
       line-height: 1.2;
       white-space: pre-wrap;
-      cursor: pointer;                /* 讓標題看起來可點擊 */
-      user-select: none;              /* 避免選取文字 */
+      cursor: pointer;
+      user-select: none;
     }
     h1:hover {
-      color: #0078d7;                 /* 滑鼠移過去變色提示可點 */
+      color: #0078d7;
     }
     p { font-size: 28px; margin-bottom: 40px; }
     .button-container {
@@ -96,7 +96,7 @@
 </head>
 <body>
   <h1 id="title" onclick="startBackgroundMusic()">🎉分行主管聯歡晚宴壓軸幸運大抽獎🎉</h1>
-  <p>按「開始抽獎」進行抽獎</p>
+  <p>然後按「開始抽獎」進行抽獎</p>
 
   <!-- 背景音樂 -->
   <audio id="bgMusic" loop preload="auto">
@@ -161,6 +161,8 @@
     const winSound = document.getElementById("winSound");
     const bgMusic = document.getElementById("bgMusic");
 
+    let isBgMusicStarted = false;
+
     function saveRemaining() {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(names));
     }
@@ -170,13 +172,15 @@
       saveRemaining();
     }
 
-    // 點擊標題開始播放背景音樂
     function startBackgroundMusic() {
-      bgMusic.volume = 0.3;  // 背景音樂音量較低
-      bgMusic.play().catch(e => {
-        console.log("背景音樂播放失敗", e);
-        alert("請再次點擊標題啟動背景音樂（Safari/iPad 需要使用者互動）");
-      });
+      if (!isBgMusicStarted) {
+        bgMusic.volume = 0.3;
+        bgMusic.play().catch(e => {
+          console.log("背景音樂播放失敗", e);
+          alert("請再次點擊標題啟動背景音樂（Safari/iPad 需要互動）");
+        });
+        isBgMusicStarted = true;
+      }
     }
 
     function startDraw() {
@@ -187,25 +191,22 @@
         return;
       }
 
-      // 抽獎開始 → 暫停背景音樂
       bgMusic.pause();
-
       drawBtn.disabled = true;
       winnerDiv.classList.remove("show");
       winnerDiv.innerText = "";
 
-      // 播放鼓聲
       drumRoll.currentTime = 0;
       drumRoll.play().catch(e => console.log("鼓聲播放失敗", e));
 
-      let shuffleCount = 0;
-      const maxShuffles = 40 + Math.floor(Math.random() * 20);
-      const shuffleInterval = setInterval(() => {
-        const randomName = names[Math.floor(Math.random() * names.length)];
-        display.innerText = randomName;
-        shuffleCount++;
+      // 固定滾動時間：2.3 秒
+      const TOTAL_DURATION = 2300;     // 毫秒
+      const INTERVAL = 60;             // 每 60ms 換一次，視覺較流暢
+      let startTime = Date.now();
 
-        if (shuffleCount >= maxShuffles) {
+      const shuffleInterval = setInterval(() => {
+        const elapsed = Date.now() - startTime;
+        if (elapsed >= TOTAL_DURATION) {
           clearInterval(shuffleInterval);
           drumRoll.pause();
 
@@ -216,19 +217,22 @@
           winnerDiv.innerText = "🎊 恭喜 " + winner + " 🎊";
           winnerDiv.classList.add("show");
 
-          // 播放勝利音效，並在結束後恢復背景音樂
           winSound.currentTime = 0;
           winSound.play().catch(e => console.log("勝利音效播放失敗", e));
 
-          // 監聽 win-cheer 播放結束事件
           winSound.onended = function() {
             bgMusic.play().catch(e => console.log("恢復背景音樂失敗", e));
           };
 
           updateRemaining();
           drawBtn.disabled = false;
+          return;
         }
-      }, 80);
+
+        // 隨機顯示名字
+        const randomName = names[Math.floor(Math.random() * names.length)];
+        display.innerText = randomName;
+      }, INTERVAL);
     }
 
     function resetDraw() {
@@ -241,7 +245,7 @@
         drawBtn.disabled = false;
         drumRoll.pause();
         winSound.pause();
-        bgMusic.pause();  // 重設時暫停背景音樂
+        bgMusic.pause();
         updateRemaining();
         alert("抽獎已重設完成！");
       }
