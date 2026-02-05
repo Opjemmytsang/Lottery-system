@@ -27,6 +27,9 @@
     h1:hover {
       color: #0078d7;
     }
+    h1.paused {
+      color: #999;                /* 暫停時標題變灰提示 */
+    }
     p { font-size: 28px; margin-bottom: 40px; }
     .button-container {
       display: flex;
@@ -95,7 +98,7 @@
   </style>
 </head>
 <body>
-  <h1 id="title" onclick="startBackgroundMusic()">🎉分行主管聯歡晚宴壓軸幸運大抽獎🎉</h1>
+  <h1 id="title">🎉分行主管聯歡晚宴壓軸幸運大抽獎🎉</h1>
   <p>按「開始抽獎」進行抽獎</p>
 
   <!-- 背景音樂 -->
@@ -133,9 +136,9 @@
       "NP5 陳秋明","SGO 莊偉平","SS1 勞俊諺","SS2 李祥江","ST5 黃文鋒","ST6 張漢威",
       "TC1 莊銘塨","TF1 邱志明","TK2 高文禮","TK3 鄭偉華","TK4 郭志強","TK5 李淑芬",
       "TM1 吳沛權","TM3 陳志偉","TM4 鄭志建","TP1 鄧展鵬","TS6 周治中","TSA 吳惠蓉",
-      "TSB 余健林","TSC 陳卓君","TW1 楊凱帆","TW2 鄭志文","TW4 曾昭樑",
+      "TSB 余健林","TSC 陳卓君","TW1 楊凱帆","TW2 鄭志文","TW4 曾昭樑","TW5 許栢祺",
       "TY1 李漢熙","WC1 張志傑","WF1 柯誌泰","WT1 李小軍","YL4 關雪儀","YL5 梁維昌",
-      "集團 Johnny","金至尊 林悅彬","金至尊 陳子倫","金至尊 楊振民","金至尊 杜兆榮",
+      "司機 Johnny","金至尊 林悅彬","金至尊 陳子倫","金至尊 楊振民","金至尊 杜兆榮",
       "金至尊 葉家麗","集團 王巧陽","集團 黃蘭詩","集團 黃蘇娟","集團 林華","集團 徐守瑜",
       "集團 陳靜賢","集團 張智強","集團 蔡麗華","集團 彭永權","集團 余錦池","集團 譚偉賢",
       "集團 黎佩瑜","集團 李兆麟","集團 陳志豪"
@@ -160,8 +163,7 @@
     const drumRoll = document.getElementById("drumRoll");
     const winSound = document.getElementById("winSound");
     const bgMusic = document.getElementById("bgMusic");
-
-    let isBgMusicStarted = false;
+    const title = document.getElementById("title");
 
     function saveRemaining() {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(names));
@@ -172,14 +174,18 @@
       saveRemaining();
     }
 
-    function startBackgroundMusic() {
-      if (!isBgMusicStarted) {
+    // 點擊標題切換背景音樂播放/暫停
+    function toggleBackgroundMusic() {
+      if (bgMusic.paused) {
         bgMusic.volume = 0.3;
         bgMusic.play().catch(e => {
           console.log("背景音樂播放失敗", e);
           alert("請再次點擊標題啟動背景音樂（Safari/iPad 需要互動）");
         });
-        isBgMusicStarted = true;
+        title.classList.remove("paused");
+      } else {
+        bgMusic.pause();
+        title.classList.add("paused");
       }
     }
 
@@ -192,6 +198,8 @@
       }
 
       bgMusic.pause();
+      title.classList.add("paused");  // 抽獎時標題顯示為暫停狀態
+
       drawBtn.disabled = true;
       winnerDiv.classList.remove("show");
       winnerDiv.innerText = "";
@@ -200,8 +208,8 @@
       drumRoll.play().catch(e => console.log("鼓聲播放失敗", e));
 
       // 固定滾動時間：2.3 秒
-      const TOTAL_DURATION = 2980;     // 毫秒
-      const INTERVAL = 60;             // 每 60ms 換一次，視覺較流暢
+      const TOTAL_DURATION = 2980;
+      const INTERVAL = 60;
       let startTime = Date.now();
 
       const shuffleInterval = setInterval(() => {
@@ -222,6 +230,7 @@
 
           winSound.onended = function() {
             bgMusic.play().catch(e => console.log("恢復背景音樂失敗", e));
+            title.classList.remove("paused");  // 恢復播放後標題變回正常顏色
           };
 
           updateRemaining();
@@ -229,7 +238,6 @@
           return;
         }
 
-        // 隨機顯示名字
         const randomName = names[Math.floor(Math.random() * names.length)];
         display.innerText = randomName;
       }, INTERVAL);
@@ -246,10 +254,14 @@
         drumRoll.pause();
         winSound.pause();
         bgMusic.pause();
+        title.classList.add("paused");
         updateRemaining();
         alert("抽獎已重設完成！");
       }
     }
+
+    // 綁定標題點擊事件
+    title.addEventListener("click", toggleBackgroundMusic);
 
     updateRemaining();
   </script>
