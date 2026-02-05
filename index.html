@@ -11,15 +11,9 @@
       padding: 50px;
     }
     h1 {
-      font-family: "Microsoft JhengHei", "微軟正黑體", Arial, sans-serif;
       color: #333;
     }
-    p {
-      font-family: "Microsoft JhengHei", "微軟正黑體", Arial, sans-serif;
-      font-size: 18px;
-    }
     button {
-      font-family: "Microsoft JhengHei", "微軟正黑體", Arial, sans-serif;
       padding: 12px 28px;
       font-size: 20px;
       margin-top: 25px;
@@ -28,31 +22,61 @@
       color: white;
       border: none;
       border-radius: 6px;
+      font-family: "Microsoft JhengHei", "微軟正黑體", Arial, sans-serif;
     }
     button:hover {
       background-color: #005a9e;
     }
+    button:disabled {
+      background-color: #aaa;
+      cursor: not-allowed;
+    }
+
     #winner {
       margin-top: 50px;
-      font-size: 36px;           /* 這裡放大恭喜文字 */
+      font-size: 36px;
       color: #d6336c;
       font-weight: bold;
-      font-family: "Microsoft JhengHei", "微軟正黑體", Arial, sans-serif;
+      min-height: 60px;
+      opacity: 0;
+      transform: scale(0.8);
+      transition: all 0.6s ease-out;
     }
+
+    #winner.show {
+      opacity: 1;
+      transform: scale(1.1);
+      animation: pulse 1.5s infinite alternate;
+    }
+
+    @keyframes pulse {
+      from { transform: scale(1.05); text-shadow: 0 0 10px #ff6b6b; }
+      to   { transform: scale(1.15); text-shadow: 0 0 30px #ff4757; }
+    }
+
+    #display {
+      margin-top: 30px;
+      font-size: 48px;
+      font-weight: bold;
+      color: #2d3436;
+      min-height: 70px;
+      letter-spacing: 2px;
+    }
+
     #remaining {
       margin-top: 25px;
       font-size: 20px;
       color: #555;
-      font-family: "Microsoft JhengHei", "微軟正黑體", Arial, sans-serif;
     }
   </style>
 </head>
 <body>
-  <h1>🎉 分行主管聯歡晚宴 壓軸幸運大抽獎 🎉</h1>
-  <p>按下按鈕隨機抽出一位幸運兒！</p>
-  <button onclick="draw()">開始抽獎</button>
+  <h1>🎉 抽獎系統 🎉</h1>
+  <p>按下按鈕開始抽獎～名字會快速閃過，最後停下來！</p>
+  <button id="drawBtn" onclick="startDraw()">開始抽獎</button>
+  <div id="display"></div>
   <div id="winner"></div>
-  <div id="remaining"></div>
+  <div id="remaining">剩餘人數：計算中...</div>
 
   <script>
     let names = [
@@ -73,17 +97,54 @@
       "集團 黎佩瑜","集團 李兆麟","集團 陳志豪"
     ];
 
-    function draw() {
+    const display = document.getElementById("display");
+    const winnerDiv = document.getElementById("winner");
+    const remainingDiv = document.getElementById("remaining");
+    const drawBtn = document.getElementById("drawBtn");
+
+    function updateRemaining() {
+      remainingDiv.innerText = "剩餘人數：" + names.length;
+    }
+
+    function startDraw() {
       if (names.length === 0) {
-        document.getElementById("winner").innerText = "🎊 所有人都已經抽過了！ 🎊";
-        document.getElementById("remaining").innerText = "";
+        winnerDiv.innerText = "🎊 所有人都已經抽過了！ 🎊";
+        winnerDiv.classList.add("show");
+        drawBtn.disabled = true;
         return;
       }
-      const index = Math.floor(Math.random() * names.length);
-      const winner = names.splice(index, 1)[0];
-      document.getElementById("winner").innerText = "🎊 恭喜 " + winner + " 🎊";
-      document.getElementById("remaining").innerText = "剩餘人數：" + names.length;
+
+      drawBtn.disabled = true;
+      winnerDiv.classList.remove("show");
+      winnerDiv.innerText = "";
+
+      // 快速滾動名字（shuffle 效果）
+      let shuffleCount = 0;
+      const maxShuffles = 40 + Math.floor(Math.random() * 20); // 滾動 40~60 次
+      const shuffleInterval = setInterval(() => {
+        const randomName = names[Math.floor(Math.random() * names.length)];
+        display.innerText = randomName;
+        shuffleCount++;
+
+        if (shuffleCount >= maxShuffles) {
+          clearInterval(shuffleInterval);
+
+          // 最後抽出真實中獎者
+          const index = Math.floor(Math.random() * names.length);
+          const winner = names.splice(index, 1)[0];
+
+          display.innerText = winner;
+          winnerDiv.innerText = "🎊 恭喜 " + winner + " 🎊";
+          winnerDiv.classList.add("show");
+
+          updateRemaining();
+          drawBtn.disabled = false;
+        }
+      }, 80); // 每 80ms 換一次，速度感強
     }
+
+    // 頁面載入時先更新剩餘人數
+    updateRemaining();
   </script>
 </body>
 </html>
