@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>分行主管聯歡晚宴 壓軸幸運大抽獎</title>
+  <title>抽獎系統 - iPad 優化版</title>
   <style>
     body {
       font-family: "Microsoft JhengHei", "微軟正黑體", Arial, sans-serif;
@@ -18,10 +18,11 @@
       color: #333;
       font-size: 48px;
       margin-bottom: 20px;
-      line-height: 1.2;           /* 確保標題分行時好看 */
-      white-space: pre-wrap;      /* 保留換行 */
     }
-    p { font-size: 28px; margin-bottom: 40px; }
+    p {
+      font-size: 28px;
+      margin-bottom: 40px;
+    }
     .button-container {
       display: flex;
       justify-content: center;
@@ -39,11 +40,23 @@
       font-family: "Microsoft JhengHei", "微軟正黑體", Arial, sans-serif;
       box-shadow: 0 4px 10px rgba(0,0,0,0.2);
     }
-    #drawBtn { background-color: #0078d7; }
-    #drawBtn:hover { background-color: #005a9e; }
-    #resetBtn { background-color: #e74c3c; }
-    #resetBtn:hover { background-color: #c0392b; }
-    button:disabled { background-color: #aaa !important; cursor: not-allowed; box-shadow: none; }
+    #drawBtn {
+      background-color: #0078d7;
+    }
+    #drawBtn:hover {
+      background-color: #005a9e;
+    }
+    #resetBtn {
+      background-color: #e74c3c;
+    }
+    #resetBtn:hover {
+      background-color: #c0392b;
+    }
+    button:disabled {
+      background-color: #aaa !important;
+      cursor: not-allowed;
+      box-shadow: none;
+    }
 
     #display {
       margin: 40px 0;
@@ -68,17 +81,25 @@
     #winner.show {
       opacity: 1;
       transform: scale(1.05);
-      animation: pulse 1s alternate 3;
+      animation: pulse 1s alternate 3;   /* 只閃 3 次，約 3 秒 */
     }
 
     @keyframes pulse {
-      from { transform: scale(1.0); text-shadow: 0 0 15px #ff6b6b; }
-      to   { transform: scale(1.15); text-shadow: 0 0 40px #ff4757, 0 0 60px #ff4757; }
+      from {
+        transform: scale(1.0);
+        text-shadow: 0 0 15px #ff6b6b;
+      }
+      to {
+        transform: scale(1.15);
+        text-shadow: 0 0 40px #ff4757, 0 0 60px #ff4757;
+      }
     }
 
-    #remaining { font-size: 28px; color: #555; margin-top: 30px; }
-
-    audio { display: none; }
+    #remaining {
+      font-size: 28px;
+      color: #555;
+      margin-top: 30px;
+    }
 
     @media (orientation: landscape) {
       body { padding: 40px 60px; }
@@ -89,16 +110,8 @@
   </style>
 </head>
 <body>
-  <h1>🎉分行主管聯歡晚宴<br>壓軸幸運大抽獎🎉</h1>
-  <p>按下「開始抽獎」開始，配有音效！誤操作可重設</p>
-
-  <!-- 音效元素 -->
-  <audio id="drumRoll" preload="auto">
-    <source src="https://assets.mixkit.co/sfx/preview/mixkit-drum-roll-146.mp3" type="audio/mpeg">
-  </audio>
-  <audio id="winSound" preload="auto">
-    <source src="https://assets.mixkit.co/sfx/preview/mixkit-cheerful-crowd-cheering-464.mp3" type="audio/mpeg">
-  </audio>
+  <h1>🎉 抽獎系統 🎉</h1>
+  <p>按下「開始抽獎」開始，誤操作可按「重設抽獎」恢復全部名單</p>
 
   <div class="button-container">
     <button id="drawBtn" onclick="startDraw()">開始抽獎</button>
@@ -110,6 +123,7 @@
   <div id="remaining">剩餘人數：計算中...</div>
 
   <script>
+    // 原始名單（永遠不變，用來重設）
     const originalNames = [
       "CW4 陳少玲","CWC 李金鈕","CWD 周慶釗","JD6 吳厚默","KF1 黃秀娟","KL1 杜坤成",
       "MA4 姚文成","MA5 翁卓敬","MA6 盧熾球","MA8 彭可昌","MA9 林美祺","MAA 施銘山",
@@ -128,14 +142,13 @@
       "集團 黎佩瑜","集團 李兆麟","集團 陳志豪"
     ];
 
-    let names = [...originalNames];
+    // 目前使用的抽獎名單（會被修改）
+    let names = [...originalNames];  // 複製一份
 
     const display = document.getElementById("display");
     const winnerDiv = document.getElementById("winner");
     const remainingDiv = document.getElementById("remaining");
     const drawBtn = document.getElementById("drawBtn");
-    const drumRoll = document.getElementById("drumRoll");
-    const winSound = document.getElementById("winSound");
 
     function updateRemaining() {
       remainingDiv.innerText = "剩餘人數：" + names.length;
@@ -153,9 +166,6 @@
       winnerDiv.classList.remove("show");
       winnerDiv.innerText = "";
 
-      drumRoll.currentTime = 0;
-      drumRoll.play().catch(e => console.log("音效播放失敗", e));
-
       let shuffleCount = 0;
       const maxShuffles = 40 + Math.floor(Math.random() * 20);
       const shuffleInterval = setInterval(() => {
@@ -165,7 +175,6 @@
 
         if (shuffleCount >= maxShuffles) {
           clearInterval(shuffleInterval);
-          drumRoll.pause();
 
           const index = Math.floor(Math.random() * names.length);
           const winner = names.splice(index, 1)[0];
@@ -174,9 +183,6 @@
           winnerDiv.innerText = "🎊 恭喜 " + winner + " 🎊";
           winnerDiv.classList.add("show");
 
-          winSound.currentTime = 0;
-          winSound.play().catch(e => console.log("勝利音效播放失敗", e));
-
           updateRemaining();
           drawBtn.disabled = false;
         }
@@ -184,19 +190,18 @@
     }
 
     function resetDraw() {
-      if (confirm("確定要重設抽獎？所有已抽過的名單將恢復！")) {
-        names = [...originalNames];
+      if (confirm("確定要重設抽獎？所有已抽過的名單將恢復，無法復原哦！")) {
+        names = [...originalNames];  // 恢復原始名單
         display.innerText = "";
         winnerDiv.innerText = "";
         winnerDiv.classList.remove("show");
         drawBtn.disabled = false;
-        drumRoll.pause();
-        winSound.pause();
         updateRemaining();
         alert("抽獎已重設完成！");
       }
     }
 
+    // 頁面載入時初始化
     updateRemaining();
   </script>
 </body>
