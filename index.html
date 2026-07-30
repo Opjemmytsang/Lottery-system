@@ -2,316 +2,1017 @@
 <html lang="zh-HK">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#7c2855">
   <meta name="apple-mobile-web-app-capable" content="yes">
-  <title>分行主管聯歡晚宴 壓軸幸運大抽獎</title>
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+  <title>六福及金至尊主管晚宴｜壓軸幸運大抽獎</title>
+
   <style>
-    body {
-      font-family: "Microsoft JhengHei", "微軟正黑體", Arial, sans-serif;
-      background: #f7f7f7;
-      text-align: center;
-      padding: 60px 20px;
-      margin: 0;
-      min-height: 100vh;
+    :root {
+      --brand: #7c2855;
+      --brand-dark: #5f1e40;
+      --gold: #bc975a;
+      --gold-light: #ead9bb;
+      --paper: #fffdf8;
+      --text: #30262b;
+      --muted: #746970;
+      --danger: #b53a46;
+      --success: #287a57;
+      --shadow: 0 18px 50px rgba(75, 36, 57, 0.16);
+    }
+
+    * {
       box-sizing: border-box;
     }
-    h1 {
-      color: #333;
-      font-size: 48px;
-      margin-bottom: 20px;
-      line-height: 1.2;
-      white-space: pre-wrap;
-      cursor: pointer;
-      user-select: none;
+
+    html {
+      min-height: 100%;
+      background: #efe9e2;
     }
-    h1:hover {
-      color: #0078d7;
+
+    body {
+      min-height: 100vh;
+      min-height: 100dvh;
+      margin: 0;
+      padding:
+        max(24px, env(safe-area-inset-top))
+        max(18px, env(safe-area-inset-right))
+        max(24px, env(safe-area-inset-bottom))
+        max(18px, env(safe-area-inset-left));
+      display: grid;
+      place-items: center;
+      overflow-x: hidden;
+      color: var(--text);
+      font-family:
+        "Microsoft JhengHei",
+        "PingFang HK",
+        "Noto Sans TC",
+        Arial,
+        sans-serif;
+      background:
+        radial-gradient(circle at 10% 10%, rgba(188, 151, 90, 0.18), transparent 28%),
+        radial-gradient(circle at 90% 90%, rgba(124, 40, 85, 0.16), transparent 34%),
+        linear-gradient(135deg, #f7f1e8, #efe8e4);
     }
-    h1.paused {
-      color: #999;
-    }
-    p { font-size: 28px; margin-bottom: 40px; }
-    .button-container {
-      display: flex;
-      justify-content: center;
-      gap: 30px;
-      flex-wrap: wrap;
-      margin: 30px 0;
-    }
+
     button {
-      padding: 16px 40px;
-      font-size: 28px;
-      cursor: pointer;
-      color: white;
-      border: none;
-      border-radius: 10px;
-      font-family: "Microsoft JhengHei", "微軟正黑體", Arial, sans-serif;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+      font: inherit;
     }
-    #drawBtn { background-color: #0078d7; }
-    #drawBtn:hover { background-color: #005a9e; }
-    #resetBtn { background-color: #e74c3c; }
-    #resetBtn:hover { background-color: #c0392b; }
-    #winnersBtn { background-color: #27ae60; }
-    #winnersBtn:hover { background-color: #219653; }
-    button:disabled { background-color: #aaa !important; cursor: not-allowed; box-shadow: none; }
+
+    .app {
+      position: relative;
+      width: min(1180px, 100%);
+      min-height: min(760px, calc(100dvh - 48px));
+      padding: clamp(26px, 4vw, 58px);
+      overflow: hidden;
+      border: 1px solid rgba(188, 151, 90, 0.55);
+      border-radius: 28px;
+      background:
+        linear-gradient(rgba(255, 253, 248, 0.96), rgba(255, 253, 248, 0.96)),
+        repeating-linear-gradient(
+          45deg,
+          rgba(188, 151, 90, 0.05) 0,
+          rgba(188, 151, 90, 0.05) 1px,
+          transparent 1px,
+          transparent 10px
+        );
+      box-shadow: var(--shadow);
+      text-align: center;
+    }
+
+    .app::before,
+    .app::after {
+      content: "";
+      position: absolute;
+      width: 240px;
+      height: 240px;
+      border: 1px solid rgba(188, 151, 90, 0.22);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+
+    .app::before {
+      top: -150px;
+      left: -100px;
+    }
+
+    .app::after {
+      right: -90px;
+      bottom: -160px;
+    }
+
+    .topbar {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      min-height: 44px;
+    }
+
+    .icon-btn {
+      width: 44px;
+      height: 44px;
+      padding: 0;
+      display: grid;
+      place-items: center;
+      border: 1px solid rgba(124, 40, 85, 0.18);
+      border-radius: 50%;
+      color: var(--brand);
+      background: rgba(255, 255, 255, 0.8);
+      cursor: pointer;
+      transition: transform 0.2s ease, background 0.2s ease;
+    }
+
+    .icon-btn:hover {
+      transform: translateY(-2px);
+      background: #fff;
+    }
+
+    .eyebrow {
+      margin: 8px 0 10px;
+      color: var(--gold);
+      font-size: clamp(14px, 1.6vw, 18px);
+      font-weight: 700;
+      letter-spacing: 0.28em;
+    }
+
+    h1 {
+      margin: 0;
+      color: var(--brand);
+      font-family:
+        "Noto Serif TC",
+        "Songti TC",
+        "PMingLiU",
+        serif;
+      font-size: clamp(34px, 5vw, 64px);
+      line-height: 1.18;
+      letter-spacing: 0.06em;
+    }
+
+    .subtitle {
+      margin: 18px 0 0;
+      color: var(--muted);
+      font-size: clamp(17px, 2vw, 24px);
+    }
+
+    .stage {
+      position: relative;
+      z-index: 2;
+      width: min(920px, 100%);
+      margin: clamp(30px, 5vh, 54px) auto 26px;
+      padding: clamp(28px, 5vw, 48px);
+      border: 1px solid rgba(188, 151, 90, 0.42);
+      border-radius: 24px;
+      background: rgba(255, 255, 255, 0.78);
+      box-shadow: inset 0 0 0 8px rgba(188, 151, 90, 0.04);
+    }
+
+    .stage-label {
+      margin-bottom: 16px;
+      color: var(--gold);
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: 0.22em;
+    }
 
     #display {
-      margin: 40px 0;
-      font-size: 60px;
-      font-weight: bold;
-      color: #2d3436;
-      min-height: 100px;
-      letter-spacing: 4px;
+      min-height: 150px;
+      display: grid;
+      align-content: center;
+      gap: 8px;
+      overflow-wrap: anywhere;
+      color: var(--text);
+      transition: opacity 0.15s ease, transform 0.15s ease;
+    }
+
+    .display-department {
+      color: var(--gold);
+      font-size: clamp(22px, 3vw, 34px);
+      font-weight: 800;
+      line-height: 1.3;
+      letter-spacing: 0.08em;
+    }
+
+    .display-name {
+      color: var(--text);
+      font-size: clamp(42px, 7vw, 82px);
+      font-weight: 900;
+      line-height: 1.15;
+      letter-spacing: 0.08em;
+    }
+
+    #display.rolling {
+      opacity: 0.72;
+      transform: scale(0.98);
     }
 
     #winner {
-      margin: 60px 0 40px;
-      font-size: 48px;
-      color: #d6336c;
-      font-weight: bold;
-      min-height: 80px;
+      min-height: 48px;
+      margin-top: 18px;
+      color: var(--brand);
+      font-size: clamp(22px, 3vw, 36px);
+      font-weight: 800;
       opacity: 0;
-      transform: scale(0.9);
-      transition: all 0.6s ease-out;
+      transform: translateY(10px) scale(0.96);
     }
 
     #winner.show {
+      animation: winner-in 0.75s ease-out forwards, winner-glow 1.1s 0.75s ease-in-out 2;
+    }
+
+    @keyframes winner-in {
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    @keyframes winner-glow {
+      50% {
+        text-shadow: 0 0 22px rgba(188, 151, 90, 0.8);
+        transform: scale(1.04);
+      }
+    }
+
+    .controls {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      justify-content: center;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      min-width: 180px;
+      padding: 15px 24px;
+      border: 0;
+      border-radius: 999px;
+      color: #fff;
+      font-size: clamp(18px, 2vw, 23px);
+      font-weight: 800;
+      cursor: pointer;
+      box-shadow: 0 9px 22px rgba(61, 35, 47, 0.16);
+      transition: transform 0.18s ease, filter 0.18s ease, box-shadow 0.18s ease;
+    }
+
+    .btn:hover:not(:disabled) {
+      transform: translateY(-2px);
+      filter: brightness(1.04);
+      box-shadow: 0 12px 28px rgba(61, 35, 47, 0.22);
+    }
+
+    .btn:active:not(:disabled) {
+      transform: translateY(0);
+    }
+
+    .btn:disabled {
+      cursor: not-allowed;
+      opacity: 0.48;
+      box-shadow: none;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--brand), var(--brand-dark));
+    }
+
+    .btn-secondary {
+      background: linear-gradient(135deg, #c9a970, #a98042);
+    }
+
+    .btn-danger {
+      background: linear-gradient(135deg, #c7545e, var(--danger));
+    }
+
+    .status-row {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      justify-content: center;
+      gap: 12px 28px;
+      flex-wrap: wrap;
+      margin-top: 26px;
+      color: var(--muted);
+      font-size: clamp(15px, 1.8vw, 20px);
+    }
+
+    .status-pill {
+      padding: 9px 16px;
+      border: 1px solid rgba(124, 40, 85, 0.12);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.64);
+    }
+
+    .hint {
+      position: relative;
+      z-index: 2;
+      margin: 18px 0 0;
+      color: #92878d;
+      font-size: 14px;
+    }
+
+    dialog {
+      width: min(680px, calc(100% - 28px));
+      max-height: min(78vh, 760px);
+      padding: 0;
+      overflow: hidden;
+      border: 1px solid rgba(188, 151, 90, 0.55);
+      border-radius: 22px;
+      background: var(--paper);
+      box-shadow: 0 30px 90px rgba(48, 22, 37, 0.28);
+    }
+
+    dialog::backdrop {
+      background: rgba(35, 20, 28, 0.58);
+      backdrop-filter: blur(4px);
+    }
+
+    .modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      padding: 22px 24px;
+      border-bottom: 1px solid rgba(188, 151, 90, 0.25);
+    }
+
+    .modal-header h2 {
+      margin: 0;
+      color: var(--brand);
+      font-size: 26px;
+    }
+
+    .modal-body {
+      max-height: 56vh;
+      padding: 18px 24px 24px;
+      overflow-y: auto;
+      text-align: left;
+    }
+
+    .winner-list {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      counter-reset: winner;
+    }
+
+    .winner-list li {
+      counter-increment: winner;
+      display: grid;
+      grid-template-columns: 42px 1fr;
+      align-items: center;
+      gap: 12px;
+      padding: 13px 8px;
+      border-bottom: 1px solid rgba(124, 40, 85, 0.1);
+      font-size: 19px;
+    }
+
+    .winner-list li::before {
+      content: counter(winner);
+      width: 34px;
+      height: 34px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      color: #fff;
+      background: var(--brand);
+      font-size: 15px;
+      font-weight: 800;
+    }
+
+    .empty-state {
+      padding: 36px 10px;
+      color: var(--muted);
+      text-align: center;
+      font-size: 19px;
+    }
+
+    .close-btn {
+      min-width: auto;
+      padding: 10px 18px;
+      font-size: 16px;
+    }
+
+    .toast {
+      position: fixed;
+      z-index: 20;
+      left: 50%;
+      bottom: max(22px, env(safe-area-inset-bottom));
+      padding: 12px 18px;
+      border-radius: 999px;
+      color: #fff;
+      background: rgba(48, 38, 43, 0.92);
+      box-shadow: 0 8px 28px rgba(0, 0, 0, 0.2);
+      opacity: 0;
+      transform: translate(-50%, 16px);
+      pointer-events: none;
+      transition: 0.25s ease;
+    }
+
+    .toast.show {
       opacity: 1;
-      transform: scale(1.05);
-      animation: pulse 1s alternate 3;
+      transform: translate(-50%, 0);
     }
 
-    @keyframes pulse {
-      from { transform: scale(1.0); text-shadow: 0 0 15px #ff6b6b; }
-      to   { transform: scale(1.15); text-shadow: 0 0 40px #ff4757, 0 0 60px #ff4757; }
+    .confetti {
+      position: fixed;
+      z-index: 15;
+      top: -20px;
+      width: 10px;
+      height: 18px;
+      border-radius: 2px;
+      pointer-events: none;
+      animation: confetti-fall linear forwards;
     }
 
-    #remaining { font-size: 28px; color: #555; margin-top: 30px; }
+    @keyframes confetti-fall {
+      to {
+        transform: translate3d(var(--drift), 110vh, 0) rotate(760deg);
+        opacity: 0.9;
+      }
+    }
 
-    audio { display: none; }
+    @media (max-width: 680px) {
+      body {
+        padding: 12px;
+      }
 
-    @media (orientation: landscape) {
-      body { padding: 40px 60px; }
-      h1 { font-size: 52px; }
-      #display { font-size: 70px; }
-      #winner { font-size: 56px; }
+      .app {
+        min-height: calc(100dvh - 24px);
+        padding: 18px 14px 24px;
+        border-radius: 20px;
+      }
+
+      .topbar {
+        min-height: 38px;
+      }
+
+      .icon-btn {
+        width: 40px;
+        height: 40px;
+      }
+
+      .stage {
+        margin-top: 28px;
+        padding: 26px 16px;
+      }
+
+      .controls {
+        display: grid;
+        grid-template-columns: 1fr;
+      }
+
+      .btn {
+        width: 100%;
+      }
+
+      .hint {
+        display: none;
+      }
+    }
+
+    @media (orientation: landscape) and (max-height: 760px) {
+      body {
+        padding: 10px;
+      }
+
+      .app {
+        min-height: calc(100dvh - 20px);
+        padding: 16px 28px 20px;
+      }
+
+      .eyebrow {
+        margin-top: 0;
+      }
+
+      h1 {
+        font-size: clamp(30px, 5vw, 50px);
+      }
+
+      .subtitle {
+        margin-top: 8px;
+      }
+
+      .stage {
+        margin: 18px auto;
+        padding: 20px;
+      }
+
+      #display {
+        min-height: 70px;
+      }
+
+      #winner {
+        margin-top: 8px;
+      }
+
+      .status-row {
+        margin-top: 14px;
+      }
+
+      .hint {
+        margin-top: 10px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        scroll-behavior: auto !important;
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
     }
   </style>
 </head>
-<body>
-  <h1 id="title">🎉分行主管聯歡晚宴壓軸幸運大抽獎🎉</h1>
-  <p>按「開始抽獎」進行抽獎</p>
 
-  <!-- 背景音樂 -->
-  <audio id="bgMusic" loop preload="auto">
+<body>
+  <main class="app">
+    <div class="topbar">
+      <button id="musicBtn" class="icon-btn" type="button" aria-label="播放背景音樂" title="播放／暫停背景音樂">
+        🔇
+      </button>
+      <button id="fullscreenBtn" class="icon-btn" type="button" aria-label="全螢幕顯示" title="全螢幕">
+        ⛶
+      </button>
+    </div>
+
+    <div class="eyebrow">LUCKY DRAW</div>
+    <h1>分行主管聯歡晚宴<br>壓軸幸運大抽獎</h1>
+    <p class="subtitle">按「開始抽獎」抽出得獎者</p>
+
+    <section class="stage" aria-live="polite" aria-atomic="true">
+      <div class="stage-label">抽獎結果</div>
+      <div id="display">
+        <div id="displayDepartment" class="display-department">準備開始</div>
+        <div id="displayName" class="display-name"></div>
+      </div>
+      <div id="winner"></div>
+    </section>
+
+    <div class="controls">
+      <button id="drawBtn" class="btn btn-primary" type="button">開始抽獎</button>
+      <button id="winnersBtn" class="btn btn-secondary" type="button">查看得獎名單</button>
+      <button id="resetBtn" class="btn btn-danger" type="button">重設抽獎</button>
+    </div>
+
+    <div class="status-row">
+      <span id="remaining" class="status-pill">剩餘人數：計算中</span>
+      <span id="winnerCount" class="status-pill">已抽出：0 人</span>
+    </div>
+
+    <p class="hint">快捷鍵：空白鍵開始抽獎｜M 播放音樂｜F 全螢幕</p>
+  </main>
+
+  <dialog id="winnersDialog">
+    <div class="modal-header">
+      <h2>得獎名單</h2>
+      <button id="closeDialogBtn" class="btn btn-primary close-btn" type="button">關閉</button>
+    </div>
+    <div class="modal-body">
+      <ol id="winnerList" class="winner-list"></ol>
+      <div id="emptyWinners" class="empty-state">暫未抽出得獎者</div>
+    </div>
+  </dialog>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <audio id="bgMusic" loop preload="metadata">
     <source src="Background-Music.mpeg" type="audio/mpeg">
   </audio>
 
-  <!-- 抽獎音效 -->
-  <audio id="drumRoll" preload="auto">
+  <audio id="drumRoll" preload="metadata">
     <source src="drumroll.mp3" type="audio/mpeg">
   </audio>
-  <audio id="winSound" preload="auto">
+
+  <audio id="winSound" preload="metadata">
     <source src="win-cheer.mp3" type="audio/mpeg">
   </audio>
 
-  <div class="button-container">
-    <button id="drawBtn" onclick="startDraw()">開始抽獎</button>
-    <button id="resetBtn" onclick="resetDraw()">重設抽獎</button>
-    <button id="winnersBtn" onclick="showWinners()">查看得獎名單</button>
-  </div>
-
-  <div id="display"></div>
-  <div id="winner"></div>
-  <div id="remaining">剩餘人數：計算中...</div>
-
   <script>
-    const STORAGE_KEY = "luckyDrawRemainingNames";
-    const WINNERS_KEY = "luckyDrawWinners";  // 新增：儲存得獎名單到 localStorage
+    "use strict";
+
+    const STORAGE_VERSION = "2026-07-30-v1";
+    const STORAGE_KEY = `luckyDrawRemainingNames:${STORAGE_VERSION}`;
+    const WINNERS_KEY = `luckyDrawWinners:${STORAGE_VERSION}`;
+
+    const DRAW_DURATION = 2980;
+    const INITIAL_INTERVAL = 55;
 
     const originalNames = [
-    "集團 王巧陽","集團 黃蘭詩","金至尊 Irene","金至尊財務總裁 陳卓謙","集團 張卓堅",
-"集團 林華","集團 陳素娟","集團 黃蘇娟","集團 徐守瑜","TS6 周治中","集團 鍾惠冰",
-"集團 黃偉棠","SS1 勞俊諺","TM1 吳沛權","TF1 邱志明","CWC 李金鈕",
-"MA4 姚文成","採購部(鑽石) 蔡麗華","採購部(成品) 彭永權","採購部(鑽石) 余錦池",
-"採購部(素金) 譚偉賢","產品拓展部 陳靜賢","物業部 張智強","人力資源部 黎佩瑜",
-"業務部(海外) 劉偉倫","培訓部 陳可賢","電子商務部 陳海晴","公司秘書部 邱清微",
-"財會部(資金管理) 吳敏儀","財會部 黃嘉熙","財會部(管理會計) 蕭仲賢",
-"財會部(財務會計) 蕭凱榮","採購部(玉器) 李宛蓉","企業禮品部 曾一婷",
-"編貨部 曾家寶","企業傳訊部 吳靜雯","珠寶設計部 區國文","資訊科技部 黎其琼",
-"資訊科技部(硬件) 林曦明","室內設計部 趙穎璋","影音視像部 郭亦升",
-"店舖稽核部 李兆麟","營運部 陳志豪","集團 Johnny","KF1 黃秀娟","MO1 朱國強",
-"SS2 李祥江","ST5 黃文鋒","ST6 張漢威","TC1 莊銘塨","TP1 鄧展鵬",
-"TY1 李漢熙","WF1 柯誌泰","JD6 吳厚默","MK1 郭劍峰","MK2 馮子泉",
-"MK7 王生偉","MK8 陳峰雲","MKC 何川","MKD 戴玲玲","MKE 劉世傑",
-"MKF 陳小琪","MKG 李雅雲","NC1 麥錦燦","TSA 吳惠蓉","TSB 余健林",
-"TSC 陳卓君","UK1 王汛鏸","TM3 陳志偉","TM4 鄭志建","TW1 楊凱帆",
-"TW2 鄭志文","TW4 曾昭樑","TW5 許栢祺","YL4 關雪儀","YL5 梁維昌",
-"KL1 杜坤成","SGO 莊偉平","TK2 高文禮","TK3 鄭偉華","TK4 郭志強",
-"TK5 李淑芬","WT1 李小軍","CW4 陳少玲","CWD 周慶釗","NP4 吳凝琦",
-"NP5 陳秋明","WC1 張志傑","MA5 翁卓敬","MA6 盧熾球","MA8 彭可昌",
-"MA9 何國雄","MAA 施銘山","MAF 張國棟","MAH 吳文林","MAJ 歐廣文",
-"MAM 毛展強","MAO 余國雄","MAP 林兆強","MAQ 葉沛達","MAR 鄧偉傑",
-"MAS 王展鵬","MAU 劉國賢","MAV 楊耀生","MAW 黃雪盈","金至尊 陳子倫",
-"金至尊 楊振民","金至尊 杜兆榮","金至尊 葉家麗","金至尊 林悅彬","金至尊 陳藝蘭"
+      "集團 王巧陽","集團 黃蘭詩","金至尊 Irene","金至尊財務總裁 陳卓謙","集團 張卓堅",
+      "集團 林華","集團 陳素娟","集團 黃蘇娟","集團 徐守瑜","TS6 周治中","集團 鍾惠冰",
+      "集團 黃偉棠","SS1 勞俊諺","TM1 吳沛權","TF1 邱志明","CWC 李金鈕",
+      "MA4 姚文成","採購部(鑽石) 蔡麗華","採購部(成品) 彭永權","採購部(鑽石) 余錦池",
+      "採購部(素金) 譚偉賢","產品拓展部 陳靜賢","物業部 張智強","人力資源部 黎佩瑜",
+      "業務部(海外) 劉偉倫","培訓部 陳可賢","電子商務部 陳海晴","公司秘書部 邱清微",
+      "財會部(資金管理) 吳敏儀","財會部 黃嘉熙","財會部(管理會計) 蕭仲賢",
+      "財會部(財務會計) 蕭凱榮","採購部(玉器) 李宛蓉","企業禮品部 曾一婷",
+      "編貨部 曾家寶","企業傳訊部 吳靜雯","珠寶設計部 區國文","資訊科技部 黎其琼",
+      "資訊科技部(硬件) 林曦明","室內設計部 趙穎璋","影音視像部 郭亦升",
+      "店舖稽核部 李兆麟","營運部 陳志豪","集團 Johnny","KF1 黃秀娟","MO1 朱國強",
+      "SS2 李祥江","ST5 黃文鋒","ST6 張漢威","TC1 莊銘塨","TP1 鄧展鵬",
+      "TY1 李漢熙","WF1 柯誌泰","JD6 吳厚默","MK1 郭劍峰","MK2 馮子泉",
+      "MK7 王生偉","MK8 陳峰雲","MKC 何川","MKD 戴玲玲","MKE 劉世傑",
+      "MKF 陳小琪","MKG 李雅雲","NC1 麥錦燦","TSA 吳惠蓉","TSB 余健林",
+      "TSC 陳卓君","UK1 王汛鏸","TM3 陳志偉","TM4 鄭志建","TW1 楊凱帆",
+      "TW2 鄭志文","TW4 曾昭樑","TW5 許栢祺","YL4 關雪儀","YL5 梁維昌",
+      "KL1 杜坤成","SGO 莊偉平","TK2 高文禮","TK3 鄭偉華","TK4 郭志強",
+      "TK5 李淑芬","WT1 李小軍","CW4 陳少玲","CWD 周慶釗","NP4 吳凝琦",
+      "NP5 陳秋明","WC1 張志傑","MA5 翁卓敬","MA6 盧熾球","MA8 彭可昌",
+      "MA9 何國雄","MAA 施銘山","MAF 張國棟","MAH 吳文林","MAJ 歐廣文",
+      "MAM 毛展強","MAO 余國雄","MAP 林兆強","MAQ 葉沛達","MAR 鄧偉傑",
+      "MAS 王展鵬","MAU 劉國賢","MAV 楊耀生","MAW 黃雪盈","金至尊 陳子倫",
+      "金至尊 楊振民","金至尊 杜兆榮","金至尊 葉家麗","金至尊 林悅彬","金至尊 陳藝蘭"
     ];
 
-    let names = [];
-    let winners = [];  // 儲存得獎名單
+    const elements = {
+      display: document.getElementById("display"),
+      displayDepartment: document.getElementById("displayDepartment"),
+      displayName: document.getElementById("displayName"),
+      winner: document.getElementById("winner"),
+      remaining: document.getElementById("remaining"),
+      winnerCount: document.getElementById("winnerCount"),
+      drawBtn: document.getElementById("drawBtn"),
+      resetBtn: document.getElementById("resetBtn"),
+      winnersBtn: document.getElementById("winnersBtn"),
+      musicBtn: document.getElementById("musicBtn"),
+      fullscreenBtn: document.getElementById("fullscreenBtn"),
+      bgMusic: document.getElementById("bgMusic"),
+      drumRoll: document.getElementById("drumRoll"),
+      winSound: document.getElementById("winSound"),
+      winnersDialog: document.getElementById("winnersDialog"),
+      winnerList: document.getElementById("winnerList"),
+      emptyWinners: document.getElementById("emptyWinners"),
+      closeDialogBtn: document.getElementById("closeDialogBtn"),
+      toast: document.getElementById("toast")
+    };
 
-    // 載入剩餘名單
-    const savedNames = localStorage.getItem(STORAGE_KEY);
-    if (savedNames) {
+    let names = loadArray(STORAGE_KEY, originalNames);
+    let winners = loadArray(WINNERS_KEY, []);
+    let isDrawing = false;
+    let drawTimer = null;
+    let toastTimer = null;
+
+    function loadArray(key, fallback) {
       try {
-        names = JSON.parse(savedNames);
-      } catch (e) {
-        names = [...originalNames];
+        const stored = localStorage.getItem(key);
+        if (!stored) return [...fallback];
+
+        const parsed = JSON.parse(stored);
+        return Array.isArray(parsed) ? parsed : [...fallback];
+      } catch (error) {
+        console.warn(`讀取 ${key} 失敗：`, error);
+        return [...fallback];
       }
-    } else {
-      names = [...originalNames];
     }
 
-    // 載入已抽中的得獎名單
-    const savedWinners = localStorage.getItem(WINNERS_KEY);
-    if (savedWinners) {
+    function persistState() {
       try {
-        winners = JSON.parse(savedWinners);
-      } catch (e) {
-        winners = [];
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(names));
+        localStorage.setItem(WINNERS_KEY, JSON.stringify(winners));
+      } catch (error) {
+        console.warn("儲存抽獎資料失敗：", error);
+        showToast("無法儲存抽獎進度，請勿重新整理頁面");
       }
     }
 
-    const display = document.getElementById("display");
-    const winnerDiv = document.getElementById("winner");
-    const remainingDiv = document.getElementById("remaining");
-    const drawBtn = document.getElementById("drawBtn");
-    const drumRoll = document.getElementById("drumRoll");
-    const winSound = document.getElementById("winSound");
-    const bgMusic = document.getElementById("bgMusic");
-    const title = document.getElementById("title");
-
-    function saveRemaining() {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(names));
+    function updateStatus() {
+      elements.remaining.textContent = `剩餘人數：${names.length}`;
+      elements.winnerCount.textContent = `已抽出：${winners.length} 人`;
+      elements.drawBtn.disabled = isDrawing || names.length === 0;
+      elements.drawBtn.textContent = isDrawing
+        ? "抽獎進行中…"
+        : names.length === 0
+          ? "抽獎已完成"
+          : "開始抽獎";
     }
 
-    function saveWinners() {
-      localStorage.setItem(WINNERS_KEY, JSON.stringify(winners));
+    function randomIndex(max) {
+      if (max <= 0) return 0;
+
+      if (window.crypto?.getRandomValues) {
+        const limit = Math.floor(0x100000000 / max) * max;
+        const values = new Uint32Array(1);
+        let value;
+
+        do {
+          window.crypto.getRandomValues(values);
+          value = values[0];
+        } while (value >= limit);
+
+        return value % max;
+      }
+
+      return Math.floor(Math.random() * max);
     }
 
-    function updateRemaining() {
-      remainingDiv.innerText = "剩餘人數：" + names.length;
-      saveRemaining();
+    function splitEntry(entry) {
+      const separatorIndex = entry.lastIndexOf(" ");
+
+      if (separatorIndex === -1) {
+        return { department: "", name: entry };
+      }
+
+      return {
+        department: entry.slice(0, separatorIndex).trim(),
+        name: entry.slice(separatorIndex + 1).trim()
+      };
     }
 
-    function toggleBackgroundMusic() {
-      if (bgMusic.paused) {
-        bgMusic.volume = 0.3;
-        bgMusic.play().catch(e => {
-          console.log("背景音樂播放失敗", e);
-          alert("請再次點擊標題啟動背景音樂（Safari/iPad 需要互動）");
-        });
-        title.classList.remove("paused");
+    function showEntry(entry) {
+      const { department, name } = splitEntry(entry);
+      elements.displayDepartment.textContent = department;
+      elements.displayName.textContent = name;
+    }
+
+    function playAudio(audio, volume = 1) {
+      audio.volume = volume;
+      audio.currentTime = 0;
+      return audio.play().catch((error) => {
+        console.warn("音效播放失敗：", error);
+      });
+    }
+
+    function pauseAudio(audio, reset = false) {
+      audio.pause();
+      if (reset) audio.currentTime = 0;
+    }
+
+    function setMusicButton() {
+      const playing = !elements.bgMusic.paused;
+      elements.musicBtn.textContent = playing ? "🔊" : "🔇";
+      elements.musicBtn.setAttribute(
+        "aria-label",
+        playing ? "暫停背景音樂" : "播放背景音樂"
+      );
+    }
+
+    async function toggleBackgroundMusic() {
+      if (elements.bgMusic.paused) {
+        elements.bgMusic.volume = 0.28;
+        try {
+          await elements.bgMusic.play();
+        } catch (error) {
+          console.warn("背景音樂播放失敗：", error);
+          showToast("瀏覽器未允許播放音樂，請再按一次音樂按鈕");
+        }
       } else {
-        bgMusic.pause();
-        title.classList.add("paused");
+        elements.bgMusic.pause();
       }
+
+      setMusicButton();
+    }
+
+    function scheduleRolling(startTime) {
+      const elapsed = performance.now() - startTime;
+
+      if (elapsed >= DRAW_DURATION) {
+        finishDraw();
+        return;
+      }
+
+      const progress = elapsed / DRAW_DURATION;
+      const interval = INITIAL_INTERVAL + Math.pow(progress, 3) * 210;
+
+      showEntry(names[randomIndex(names.length)]);
+      elements.display.classList.toggle("rolling");
+
+      drawTimer = window.setTimeout(
+        () => scheduleRolling(startTime),
+        interval
+      );
     }
 
     function startDraw() {
+      if (isDrawing) return;
+
       if (names.length === 0) {
-        winnerDiv.innerText = "🎊 所有人都已經抽過了！ 🎊";
-        winnerDiv.classList.add("show");
-        drawBtn.disabled = true;
+        elements.displayDepartment.textContent = "抽獎已完成";
+        elements.displayName.textContent = "";
+        elements.winner.textContent = "所有參加者均已抽出";
+        elements.winner.classList.add("show");
         return;
       }
 
-      bgMusic.pause();
-      title.classList.add("paused");
+      isDrawing = true;
+      updateStatus();
 
-      drawBtn.disabled = true;
-      winnerDiv.classList.remove("show");
-      winnerDiv.innerText = "";
+      clearTimeout(drawTimer);
+      elements.winner.classList.remove("show");
+      elements.winner.textContent = "";
+      elements.display.classList.add("rolling");
 
-      drumRoll.currentTime = 0;
-      drumRoll.play().catch(e => console.log("鼓聲播放失敗", e));
+      pauseAudio(elements.bgMusic);
+      setMusicButton();
+      playAudio(elements.drumRoll, 0.8);
 
-      const TOTAL_DURATION = 2980;
-      const INTERVAL = 60;
-      let startTime = Date.now();
-
-      const shuffleInterval = setInterval(() => {
-        const elapsed = Date.now() - startTime;
-        if (elapsed >= TOTAL_DURATION) {
-          clearInterval(shuffleInterval);
-          drumRoll.pause();
-
-          const index = Math.floor(Math.random() * names.length);
-          const winner = names.splice(index, 1)[0];
-
-          // 記錄得獎者
-          winners.push(winner);
-          saveWinners();
-
-          display.innerText = winner;
-          winnerDiv.innerText = "🎊 恭喜 " + winner + " 🎊";
-          winnerDiv.classList.add("show");
-
-          winSound.currentTime = 0;
-          winSound.play().catch(e => console.log("勝利音效播放失敗", e));
-
-          winSound.onended = function() {
-            bgMusic.play().catch(e => console.log("恢復背景音樂失敗", e));
-            title.classList.remove("paused");
-          };
-
-          updateRemaining();
-          drawBtn.disabled = false;
-          return;
-        }
-
-        const randomName = names[Math.floor(Math.random() * names.length)];
-        display.innerText = randomName;
-      }, INTERVAL);
+      scheduleRolling(performance.now());
     }
 
-    // 查看得獎名單
-    function showWinners() {
+    function finishDraw() {
+      clearTimeout(drawTimer);
+      drawTimer = null;
+
+      pauseAudio(elements.drumRoll, true);
+
+      const index = randomIndex(names.length);
+      const selectedWinner = names.splice(index, 1)[0];
+
+      winners.push(selectedWinner);
+      persistState();
+
+      elements.display.classList.remove("rolling");
+
+      const { name } = splitEntry(selectedWinner);
+      showEntry(selectedWinner);
+      elements.winner.textContent = `恭喜 ${name}`;
+      elements.winner.classList.remove("show");
+
+      void elements.winner.offsetWidth;
+      elements.winner.classList.add("show");
+
+      launchConfetti();
+      playAudio(elements.winSound, 0.9);
+
+      elements.winSound.onended = async () => {
+        elements.bgMusic.volume = 0.28;
+        try {
+          await elements.bgMusic.play();
+        } catch (error) {
+          console.warn("恢復背景音樂失敗：", error);
+        }
+        setMusicButton();
+      };
+
+      isDrawing = false;
+      updateStatus();
+    }
+
+    function renderWinners() {
+      elements.winnerList.replaceChildren();
+
       if (winners.length === 0) {
-        alert("暫無得獎名單");
+        elements.emptyWinners.hidden = false;
         return;
       }
 
-      let message = "得獎名單（按抽出順序）：\n\n";
-      winners.forEach((name, index) => {
-        message += `${index + 1}. ${name}\n`;
+      elements.emptyWinners.hidden = true;
+
+      const fragment = document.createDocumentFragment();
+
+      winners.forEach((name) => {
+        const item = document.createElement("li");
+        item.textContent = name;
+        fragment.appendChild(item);
       });
 
-      alert(message);
+      elements.winnerList.appendChild(fragment);
+    }
+
+    function showWinners() {
+      renderWinners();
+
+      if (typeof elements.winnersDialog.showModal === "function") {
+        elements.winnersDialog.showModal();
+      } else {
+        const list = winners.length
+          ? winners.map((name, index) => `${index + 1}. ${name}`).join("\n")
+          : "暫未抽出得獎者";
+
+        window.alert(list);
+      }
     }
 
     function resetDraw() {
-      if (confirm("確定要重設抽獎？所有已抽過的名單及得獎記錄將清除！")) {
-        names = [...originalNames];
-        winners = [];  // 清空得獎名單
-        localStorage.removeItem(STORAGE_KEY);
-        localStorage.removeItem(WINNERS_KEY);
-        display.innerText = "";
-        winnerDiv.innerText = "";
-        winnerDiv.classList.remove("show");
-        drawBtn.disabled = false;
-        drumRoll.pause();
-        winSound.pause();
-        bgMusic.pause();
-        title.classList.add("paused");
-        updateRemaining();
-        alert("抽獎及得獎記錄已重設完成！");
+      if (isDrawing) return;
+
+      const confirmed = window.confirm(
+        "確定要重設抽獎？所有已抽出的得獎記錄將會清除。"
+      );
+
+      if (!confirmed) return;
+
+      names = [...originalNames];
+      winners = [];
+
+      clearTimeout(drawTimer);
+      drawTimer = null;
+
+      pauseAudio(elements.drumRoll, true);
+      pauseAudio(elements.winSound, true);
+      pauseAudio(elements.bgMusic, true);
+
+      elements.displayDepartment.textContent = "準備開始";
+      elements.displayName.textContent = "";
+      elements.display.classList.remove("rolling");
+      elements.winner.textContent = "";
+      elements.winner.classList.remove("show");
+
+      persistState();
+      setMusicButton();
+      updateStatus();
+      showToast("抽獎記錄已重設");
+    }
+
+    async function toggleFullscreen() {
+      try {
+        if (!document.fullscreenElement) {
+          await document.documentElement.requestFullscreen();
+        } else {
+          await document.exitFullscreen();
+        }
+      } catch (error) {
+        console.warn("全螢幕切換失敗：", error);
+        showToast("此瀏覽器未能切換全螢幕");
       }
     }
 
-    title.addEventListener("click", toggleBackgroundMusic);
+    function showToast(message) {
+      clearTimeout(toastTimer);
+      elements.toast.textContent = message;
+      elements.toast.classList.add("show");
 
-    updateRemaining();
+      toastTimer = window.setTimeout(() => {
+        elements.toast.classList.remove("show");
+      }, 2600);
+    }
+
+    function launchConfetti() {
+      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+      const colors = ["#7c2855", "#bc975a", "#ead9bb", "#b53a46", "#287a57"];
+
+      for (let i = 0; i < 70; i += 1) {
+        const piece = document.createElement("span");
+        piece.className = "confetti";
+        piece.style.left = `${Math.random() * 100}vw`;
+        piece.style.background = colors[randomIndex(colors.length)];
+        piece.style.setProperty("--drift", `${(Math.random() - 0.5) * 240}px`);
+        piece.style.animationDuration = `${2.4 + Math.random() * 2.2}s`;
+        piece.style.animationDelay = `${Math.random() * 0.5}s`;
+        piece.style.transform = `rotate(${Math.random() * 360}deg)`;
+
+        document.body.appendChild(piece);
+        piece.addEventListener("animationend", () => piece.remove(), { once: true });
+      }
+    }
+
+    elements.drawBtn.addEventListener("click", startDraw);
+    elements.winnersBtn.addEventListener("click", showWinners);
+    elements.resetBtn.addEventListener("click", resetDraw);
+    elements.musicBtn.addEventListener("click", toggleBackgroundMusic);
+    elements.fullscreenBtn.addEventListener("click", toggleFullscreen);
+    elements.closeDialogBtn.addEventListener("click", () => elements.winnersDialog.close());
+
+    elements.winnersDialog.addEventListener("click", (event) => {
+      if (event.target === elements.winnersDialog) {
+        elements.winnersDialog.close();
+      }
+    });
+
+    elements.bgMusic.addEventListener("play", setMusicButton);
+    elements.bgMusic.addEventListener("pause", setMusicButton);
+
+    document.addEventListener("fullscreenchange", () => {
+      elements.fullscreenBtn.textContent = document.fullscreenElement ? "×" : "⛶";
+      elements.fullscreenBtn.setAttribute(
+        "aria-label",
+        document.fullscreenElement ? "離開全螢幕" : "全螢幕顯示"
+      );
+    });
+
+    document.addEventListener("keydown", (event) => {
+      if (event.target.matches("button, input, textarea, select")) return;
+
+      if (event.code === "Space") {
+        event.preventDefault();
+        startDraw();
+      }
+
+      if (event.key.toLowerCase() === "m") {
+        toggleBackgroundMusic();
+      }
+
+      if (event.key.toLowerCase() === "f") {
+        toggleFullscreen();
+      }
+    });
+
+    window.addEventListener("beforeunload", () => {
+      clearTimeout(drawTimer);
+      pauseAudio(elements.drumRoll);
+      pauseAudio(elements.winSound);
+    });
+
+    persistState();
+    setMusicButton();
+    updateStatus();
   </script>
 </body>
 </html>
